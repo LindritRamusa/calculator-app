@@ -2,12 +2,42 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet"  href="style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
+    <title>Calculator App</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <div class="calculator-wrapper">
+        <div class="calculator-hud">
+          <h1 class="hud-content">455</h1>
+        </div>
+        <div class="calculator-keypad">
+          <button class="clear">C</button>
+          <button class="sign-change">+/-</button>
+          <button class="percent">%</button>
+          <button class="buttonide operand">/</button>
+          <button class="nr-7">7</button>
+          <button class="nr-8">8</button>
+          <button class="nr-9">9</button>
+          <button class="multiply operand">x</button>
+          <button class="nr-4">4</button>
+          <button class="nr-5">5</button>
+          <button class="nr-6">6</button>
+          <button class="minus operand">-</button>
+          <button class="nr-1">1</button>
+          <button class="nr-2">2</button>
+          <button class="nr-3">3</button>
+          <button class="plus operand">+</button>
+
+          <span></span>
+
+          <button class="nr-0">0</button>
+          <button class="dot">.</button>
+          <button class="euqals operand">=</button>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
