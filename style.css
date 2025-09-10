@@ -16,13 +16,14 @@ body {
 .calculator-wrapper {
   border-radius: 8px;
   width: auto;
+  box-shadow: 0 0 6px;
 }
 
 .calculator-hud{
   width: 400px;
   height: 150px;
   background-color: #111827;
-  border-radius: 8px;
+  border-radius: 8px 8px 0 0;
   color: white;
   align-content: end;
   text-align: right;
@@ -44,6 +45,7 @@ body {
   margin-top: 10px;
   font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   font-size: 30px;
+  margin-bottom: 10px;
 }
 .operand {
   background-color: #F97316;
