@@ -12,3 +12,9 @@ numberButtons.forEach(button => {
     })
 })
 
+function clearDisplay (){
+    hud.value = '';
+}
+
+document.querySelector('.clear').addEventListener('click', clearDisplay);
+
