@@ -15,6 +15,9 @@ let previousInput = null;
 let selectedOperator = null;
 
 function appendNumberToDisplay(number){
+    if(number ==='.' && currentInput.includes('.')){
+        return;
+    }
     currentInput += number;
     hud.value = currentInput;
 }
@@ -39,14 +42,6 @@ function clearDisplay (){
     currentInput = '';
 }
 
-function setOperator(op) {
-    if(previousInput === null) {
-        previousInput = parseFloat(currentInput);
-    }
-    selectedOperator = op;
-    currentInput = ''
-}
-
  function flipSign() {
     currentInput = parseFloat(hud.value);
 
@@ -61,61 +56,67 @@ function setOperator(op) {
        return;
     }
 
-    if(previousInput !== ''){
+    if(previousInput !== null && currentInput !== ''){
         calculate();
+    } else{
+        previousInput = parseFloat(currentInput);
     }
-    previousInput = currentInput;
     selectedOperator = operator;
     currentInput = '';
-    hud.value = previousInput + '' + selectedOperator;
+    if(selectedOperator === '='){
+        hud.value = previousInput;
+
+    } else{
+        hud.value = previousInput + '' + selectedOperator;
+    }
 }
 
-function calculate(){
-    if(previousInput !== null && selectedOperator ==='+' && currentInput !==''){
-        const secondNumber = parseFloat(currentInput);
-        const result = previousInput + secondNumber;
-        hud.value = result;
-        previousInput = result;
-        selectedOperator = null;
-        currentInput = '';
-    }else if(previousInput !== null && selectedOperator ==='-' && currentInput !==''){
-        const secondNumber = parseFloat(currentInput);
-        const result = previousInput - secondNumber;
-        hud.value = result;
-        previousInput = result;
-        selectedOperator = null;
-        currentInput = '';
-    }else if(previousInput !== null && selectedOperator ==='*' && currentInput !==''){
-        const secondNumber = parseFloat(currentInput);
-        const result = previousInput * secondNumber;
-        hud.value = result;
-        previousInput = result;
-        selectedOperator = null;
-        currentInput = '';
-    }else if(previousInput !== null && selectedOperator ==='/' && currentInput !==''){
-        const secondNumber = parseFloat(currentInput);
-        const result = previousInput / secondNumber;
-        hud.value = result;
-        previousInput = result;
-        selectedOperator = null;
-        currentInput = '';
-    }else if(previousInput !== null && selectedOperator ==='%'){
+function calculate() {
+    if (selectedOperator === '%' && previousInput !== null) {
         const result = previousInput / 100;
-        hud.value = result;
-        previousInput = null;
+        hud.value =  result;
+        previousInput = result;
         selectedOperator = null;
-        currentInput = ''; 
+        currentInput = '';
+        return;
     }
+
+    if (previousInput === null || selectedOperator === null || currentInput === '') {
+        return;
+    }
+
+    const secondNumber = parseFloat(currentInput);
+    let result = null;
+
+    switch (selectedOperator) {
+        case '+':
+            result = previousInput + secondNumber;
+            break;
+        case '-':
+            result = previousInput - secondNumber;
+            break;
+        case '*':
+            result = previousInput * secondNumber;
+            break;
+        case '/':
+            result = previousInput / secondNumber;
+            break;
+    }
+
+    previousInput = result;
+    selectedOperator = null;
+    currentInput = '';
 }
 
 
 
 document.querySelector('.clear').addEventListener('click', clearDisplay);
-btnAddtion.addEventListener('click',()=> setOperator('+'));
-btnSubstract.addEventListener('click',()=> setOperator('-'));
-btnMultiply.addEventListener('click', ()=> setOperator('*'));
-btnDivide.addEventListener('click', ()=> setOperator('/'));
-btnPercentage.addEventListener('click',()=> setOperator('%'))
 btnEquals.addEventListener('click', ()=> calculate());
 btnFlipSign.addEventListener('click', ()=> flipSign());
-
+btnPercentage.addEventListener('click', () => {
+    if (currentInput !== '') {
+        previousInput = parseFloat(currentInput);
+    }
+    selectedOperator = '%';
+    calculate();
+});
