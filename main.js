@@ -1,10 +1,27 @@
 'strict'
 const hud = document.querySelector('.hud-content');
 const numberButtons = document.querySelectorAll('.number-btn');
+const btnAddtion = document.querySelector('.plus');
+const btnEquals = document.querySelector('.equals');
+const btnSubstract = document.querySelector('.minus');
+const btnMultiply = document.querySelector('.multiply');
+const btnDivide = document.querySelector('.divide');
+const btnFlipSign = document.querySelector('.sign-change');
+const btnPercentage = document.querySelector('.percent');
+const operatorButtons = document.querySelectorAll('.operand');
+
+let currentInput = '';
+let previousInput = null;
+let selectedOperator = null;
 
 function appendNumberToDisplay(number){
-    hud.value += number;
+    if(number ==='.' && currentInput.includes('.')){
+        return;
+    }
+    currentInput += number;
+    hud.value = currentInput;
 }
+
 
 numberButtons.forEach(button => {
     button.addEventListener('click', ()=>{
@@ -12,9 +29,94 @@ numberButtons.forEach(button => {
     })
 })
 
+operatorButtons.forEach(button =>{
+    button.addEventListener('click', ()=>{
+        appendOperatorToDisplay(button.value);
+    })
+})
+
 function clearDisplay (){
     hud.value = '';
+    selectedOperator = null;
+    previousInput = null;
+    currentInput = '';
 }
 
-document.querySelector('.clear').addEventListener('click', clearDisplay);
+ function flipSign() {
+    currentInput = parseFloat(hud.value);
 
+    if(!isNaN(currentInput)){
+        currentInput *=-1;
+        hud.value = currentInput;
+    }
+ }
+
+ function appendOperatorToDisplay(operator){
+    if(currentInput === ''){
+       return;
+    }
+
+    if(previousInput !== null && currentInput !== ''){
+        calculate();
+    } else{
+        previousInput = parseFloat(currentInput);
+    }
+    selectedOperator = operator;
+    currentInput = '';
+    if(selectedOperator === '='){
+        hud.value = previousInput;
+
+    } else{
+        hud.value = previousInput + '' + selectedOperator;
+    }
+}
+
+function calculate() {
+    if (selectedOperator === '%' && previousInput !== null) {
+        const result = previousInput / 100;
+        hud.value =  result;
+        previousInput = result;
+        selectedOperator = null;
+        currentInput = '';
+        return;
+    }
+
+    if (previousInput === null || selectedOperator === null || currentInput === '') {
+        return;
+    }
+
+    const secondNumber = parseFloat(currentInput);
+    let result = null;
+
+    switch (selectedOperator) {
+        case '+':
+            result = previousInput + secondNumber;
+            break;
+        case '-':
+            result = previousInput - secondNumber;
+            break;
+        case '*':
+            result = previousInput * secondNumber;
+            break;
+        case '/':
+            result = previousInput / secondNumber;
+            break;
+    }
+
+    previousInput = result;
+    selectedOperator = null;
+    currentInput = '';
+}
+
+
+
+document.querySelector('.clear').addEventListener('click', clearDisplay);
+btnEquals.addEventListener('click', ()=> calculate());
+btnFlipSign.addEventListener('click', ()=> flipSign());
+btnPercentage.addEventListener('click', () => {
+    if (currentInput !== '') {
+        previousInput = parseFloat(currentInput);
+    }
+    selectedOperator = '%';
+    calculate();
+});
