@@ -8,33 +8,42 @@ const btnMultiply = document.querySelector('.multiply');
 const btnDivide = document.querySelector('.divide');
 const btnFlipSign = document.querySelector('.sign-change');
 const btnPercentage = document.querySelector('.percent');
+const operatorButtons = document.querySelectorAll('.operand');
 
 let currentInput = '';
-let firstNumber = null;
-let operator = null;
+let previousInput = null;
+let selectedOperator = null;
 
 function appendNumberToDisplay(number){
     currentInput += number;
     hud.value = currentInput;
-
 }
+
+
 numberButtons.forEach(button => {
     button.addEventListener('click', ()=>{
         appendNumberToDisplay(button.value);
     })
 })
 
+operatorButtons.forEach(button =>{
+    button.addEventListener('click', ()=>{
+        appendOperatorToDisplay(button.value);
+    })
+})
+
 function clearDisplay (){
     hud.value = '';
-    operator = null;
-    firstNumber = null;
+    selectedOperator = null;
+    previousInput = null;
+    currentInput = '';
 }
 
 function setOperator(op) {
-    if(firstNumber === null) {
-        firstNumber = parseFloat(currentInput);
+    if(previousInput === null) {
+        previousInput = parseFloat(currentInput);
     }
-    operator = op;
+    selectedOperator = op;
     currentInput = ''
 }
 
@@ -47,43 +56,59 @@ function setOperator(op) {
     }
  }
 
+ function appendOperatorToDisplay(operator){
+    if(currentInput === ''){
+       return;
+    }
+
+    if(previousInput !== ''){
+        calculate();
+    }
+    previousInput = currentInput;
+    selectedOperator = operator;
+    currentInput = '';
+    hud.value = previousInput + '' + selectedOperator;
+}
+
 function calculate(){
-    if(firstNumber !== null && operator ==='+' && currentInput !==''){
+    if(previousInput !== null && selectedOperator ==='+' && currentInput !==''){
         const secondNumber = parseFloat(currentInput);
-        const result = firstNumber + secondNumber;
+        const result = previousInput + secondNumber;
         hud.value = result;
-        firstNumber = result;
-        operator = null;
+        previousInput = result;
+        selectedOperator = null;
         currentInput = '';
-    }else if(firstNumber !== null && operator ==='-' && currentInput !==''){
+    }else if(previousInput !== null && selectedOperator ==='-' && currentInput !==''){
         const secondNumber = parseFloat(currentInput);
-        const result = firstNumber - secondNumber;
+        const result = previousInput - secondNumber;
         hud.value = result;
-        firstNumber = result;
-        operator = null;
+        previousInput = result;
+        selectedOperator = null;
         currentInput = '';
-    }else if(firstNumber !== null && operator ==='*' && currentInput !==''){
+    }else if(previousInput !== null && selectedOperator ==='*' && currentInput !==''){
         const secondNumber = parseFloat(currentInput);
-        const result = firstNumber * secondNumber;
+        const result = previousInput * secondNumber;
         hud.value = result;
-        firstNumber = result;
-        operator = null;
+        previousInput = result;
+        selectedOperator = null;
         currentInput = '';
-    }else if(firstNumber !== null && operator ==='/' && currentInput !==''){
+    }else if(previousInput !== null && selectedOperator ==='/' && currentInput !==''){
         const secondNumber = parseFloat(currentInput);
-        const result = firstNumber / secondNumber;
+        const result = previousInput / secondNumber;
         hud.value = result;
-        firstNumber = result;
-        operator = null;
+        previousInput = result;
+        selectedOperator = null;
         currentInput = '';
-    }else if(firstNumber !== null && operator ==='%'){
-        const result = firstNumber / 100;
+    }else if(previousInput !== null && selectedOperator ==='%'){
+        const result = previousInput / 100;
         hud.value = result;
-        firstNumber = null;
-        operator = null;
+        previousInput = null;
+        selectedOperator = null;
         currentInput = ''; 
     }
 }
+
+
 
 document.querySelector('.clear').addEventListener('click', clearDisplay);
 btnAddtion.addEventListener('click',()=> setOperator('+'));
