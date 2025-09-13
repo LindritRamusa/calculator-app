@@ -18,6 +18,11 @@ function appendNumberToDisplay(number){
     if(number ==='.' && currentInput.includes('.')){
         return;
     }
+    
+    if (currentInput === '' && previousInput !== null && selectedOperator === null) {
+        previousInput = null;
+    }
+    
     currentInput += number;
     hud.value = currentInput;
 }
@@ -52,6 +57,11 @@ function clearDisplay (){
  }
 
  function appendOperatorToDisplay(operator){
+    if(currentInput === '' && previousInput !== null && selectedOperator === null){
+        selectedOperator = operator;
+        hud.value = previousInput + '' + selectedOperator;
+        return;
+    }
     if(currentInput === ''){
        return;
     }
@@ -63,12 +73,7 @@ function clearDisplay (){
     }
     selectedOperator = operator;
     currentInput = '';
-    if(selectedOperator === '='){
-        hud.value = previousInput;
-
-    } else{
-        hud.value = previousInput + '' + selectedOperator;
-    }
+    hud.value = previousInput + '' + selectedOperator;
 }
 
 function calculate() {
@@ -102,8 +107,8 @@ function calculate() {
             result = previousInput / secondNumber;
             break;
     }
-
     previousInput = result;
+    hud.value = result;
     selectedOperator = null;
     currentInput = '';
 }
